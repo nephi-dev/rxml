@@ -30,7 +30,7 @@ where `"test.xml"` is the `file_name` and `"note"` is the `root_tag`.
 After that we can simply iter through the children with:
 ```python
 for node in root_file.children:
-    # do something whith the node where
+    # do something whith the node here
 ```
 
 ## Node attributes
