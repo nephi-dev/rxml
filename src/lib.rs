@@ -3,7 +3,7 @@ use quick_xml::events::Event;
 use quick_xml::Reader;
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::BufReader;
+use std::io::Read;
 
 macro_rules! f_str {
     ($e:expr) => {
@@ -68,7 +68,7 @@ impl Node {
     }
 }
 
-fn read_node(root_tag: String, reader: &mut Reader<BufReader<File>>) -> Node {
+fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
     let mut buf = Vec::new();
     let mut root = Node {
         name: root_tag.clone(),
@@ -112,8 +112,17 @@ fn read_node(root_tag: String, reader: &mut Reader<BufReader<File>>) -> Node {
 
 #[pyfunction]
 fn read_file(file_path: String, root_tag: String) -> Node {
-    let file_name = f_str!(file_path);
-    let mut reader = Reader::from_file(file_name).unwrap();
+    let mut file = File::open(file_path).unwrap();
+    let mut file_str = String::new();
+    file.read_to_string(&mut file_str).unwrap();
+    let mut reader = Reader::from_str(file_str.as_str());
+    reader.trim_text(true);
+    read_node(f_str!(root_tag), &mut reader)
+}
+
+#[pyfunction]
+fn read_string(xml_string: String, root_tag: String) -> Node {
+    let mut reader = Reader::from_str(xml_string.as_str());
     reader.trim_text(true);
     read_node(f_str!(root_tag), &mut reader)
 }
@@ -122,5 +131,6 @@ fn read_file(file_path: String, root_tag: String) -> Node {
 fn rxml(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Node>()?;
     m.add_function(wrap_pyfunction!(read_file, m)?)?;
+    m.add_function(wrap_pyfunction!(read_string, m)?)?;
     Ok(())
 }
