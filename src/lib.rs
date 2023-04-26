@@ -119,7 +119,7 @@ fn read_file(file_path: String, root_tag: String) -> Node {
 }
 
 #[pymodule]
-fn xml_reader(_py: Python, m: &PyModule) -> PyResult<()> {
+fn rxml(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<Node>()?;
     m.add_function(wrap_pyfunction!(read_file, m)?)?;
     Ok(())
