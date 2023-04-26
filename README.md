@@ -4,6 +4,16 @@
 
 `rxml` is a simple python library to read xml files up to 2 times faster than python's `xml(ElementTree)` library.
 
+## Installation
+
+To install `rxml` you can use `pip`:
+
+```bash
+pip install rxml
+```
+
+Simply as that!
+
 ## Example usage
 
 To a given xml with `test.xml` as name:
