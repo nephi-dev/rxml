@@ -28,11 +28,27 @@ struct Node {
     children: Vec<Node>,
     #[pyo3(get)]
     text: Option<String>,
-    is_closed: bool,
 }
 
 #[pymethods]
 impl Node {
+    #[new]
+    fn new(
+        name: String,
+        attrs: Option<HashMap<String, String>>,
+        children: Option<Vec<Node>>,
+        text: Option<String>,
+    ) -> PyResult<Self> {
+        let _attrs = attrs.unwrap_or(HashMap::new());
+        let _children = children.unwrap_or(Vec::new());
+        let _text = text.unwrap_or(String::new());
+        Ok(Node {
+            name,
+            attrs: _attrs,
+            children: _children,
+            text: Some(_text),
+        })
+    }
     fn __to_string(&self, spacing: Option<u8>) -> String {
         let _spacing = spacing.unwrap_or(0);
         let spaces = " ".repeat(_spacing as usize);
@@ -76,7 +92,6 @@ fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
         attrs: HashMap::new(),
         children: Vec::new(),
         text: None,
-        is_closed: false,
     };
     loop {
         match reader.read_event_into(&mut buf) {
@@ -99,7 +114,6 @@ fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
                 root.text = Some(f_str!(e.unescape().unwrap()));
             }
             Ok(Event::End(e)) if e.name().as_ref() == root_tag.as_bytes() => {
-                root.is_closed = true;
                 break;
             }
             Ok(Event::Eof) => break,

@@ -4,6 +4,13 @@ class Node:
     children: list[Node]
     text: str
 
+    def __new__(
+        cls,
+        name: str,
+        attrs: dict[str, str] = dict(),
+        children: list[Node] = list(),
+        text: str | None = None,
+    ) -> Node: ...
     def __to_string(self, spacing: int | None) -> str: ...
     def __str__(self) -> str: ...
     def __repr__(self) -> str: ...

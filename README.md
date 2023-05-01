@@ -49,6 +49,19 @@ for node in root_file.children:
     # do something whith the node here
 ```
 
+You can also write it to a file or string(refer to the `.pyi` file for the args).
+
+```python
+from rxml import Node, write_file
+
+example_node = Node(
+    name="hello_world", 
+    attrs={"example_attr": "example"},
+    text="Hello World!"
+)
+write_file(example_node, "test_ex.xml")
+```
+
 ## Node attributes
 
 This is how the `Node` looks like:
