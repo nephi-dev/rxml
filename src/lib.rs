@@ -41,12 +41,11 @@ impl Node {
     ) -> PyResult<Self> {
         let _attrs = attrs.unwrap_or(HashMap::new());
         let _children = children.unwrap_or(Vec::new());
-        let _text = text.unwrap_or(String::new());
         Ok(Node {
             name,
             attrs: _attrs,
             children: _children,
-            text: Some(_text),
+            text,
         })
     }
     fn __to_string(&self, spacing: Option<u8>) -> String {
