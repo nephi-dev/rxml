@@ -26,12 +26,10 @@ jobs:
           rustup install nightly
       - name: lint
         run: |
-          cd rmxl
           cargo fmt -- --check
           cargo clippy -- -D warnings
       - name: test
         run: |
-          cd rmxl
           cargo check
           cargo test --all
   linux:
