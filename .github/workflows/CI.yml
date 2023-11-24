@@ -15,6 +15,25 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: update
+        run: |
+          rustup update
+          rustup component add clippy
+          rustup install nightly
+      - name: lint
+        run: |
+          cd rmxl
+          cargo fmt -- --check
+          cargo clippy -- -D warnings
+      - name: test
+        run: |
+          cd rmxl
+          cargo check
+          cargo test --all
   linux:
     runs-on: ubuntu-latest
     strategy:
@@ -24,7 +43,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.12'
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
