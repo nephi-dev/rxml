@@ -4,13 +4,23 @@ build-backend = "maturin"
 
 [project]
 name = "rxml"
-requires-python = ">=3.12"
+description = "RXML is a python library to read and write xml files up to 2 times faster than python's xml included library."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "Matheus Mendes", email = "mattheus2015@yahoo.com.br" },
+]
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Typing :: Typed",
+    "License :: OSI Approved :: MIT License",
 ]
-description = "A XML parser for Python written in Rust"
 
 
 [tool.maturin]

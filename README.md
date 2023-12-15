@@ -37,7 +37,7 @@ We write the following python code:
 ```python
 from rxml import read_file
 
-root_file = read_file("test.xml", "note")
+root_node = read_file("test.xml", "note")
 ```
 
 where `"test.xml"` is the `file_name` and `"note"` is the `root_tag`.
@@ -45,8 +45,8 @@ where `"test.xml"` is the `file_name` and `"note"` is the `root_tag`.
 After that we can simply iter through the children with:
 
 ```python
-for node in root_file.children:
-    # do something whith the node here
+for node in root_node.children:
+    # do something with the node here
 ```
 
 You can also write it to a file or string(refer to the `.pyi` file for the args).
