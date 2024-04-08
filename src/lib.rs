@@ -5,7 +5,7 @@ mod read;
 mod write;
 
 #[pymodule]
-fn rxml(_py: Python, m: &PyModule) -> PyResult<()> {
+fn rxml(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<entities::Node>()?;
     m.add_function(wrap_pyfunction!(read::read_file, m)?)?;
     m.add_function(wrap_pyfunction!(read::read_string, m)?)?;
