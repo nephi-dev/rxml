@@ -1,6 +1,6 @@
 [package]
 name = "rxml"
-version = "1.1.0"
+version = "1.2.0"
 edition = "2021"
 
 [lib]
@@ -8,5 +8,5 @@ name = "rxml"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.21.1"
+pyo3 = "0.21.2"
 quick-xml = "0.31.0"
