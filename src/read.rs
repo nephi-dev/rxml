@@ -61,14 +61,14 @@ pub fn read_file(file_path: String, root_tag: String) -> Node {
     let mut file_str = String::new();
     file.read_to_string(&mut file_str).unwrap();
     let mut reader = Reader::from_str(file_str.as_str());
-    reader.trim_text(true);
+    reader.config_mut().trim_text(true);
     read_node(f_str!(root_tag), &mut reader)
 }
 
 #[pyfunction]
 pub fn read_string(xml_string: String, root_tag: String) -> Node {
     let mut reader = Reader::from_str(xml_string.as_str());
-    reader.trim_text(true);
+    reader.config_mut().trim_text(true);
     read_node(f_str!(root_tag), &mut reader)
 }
 

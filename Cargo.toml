@@ -8,5 +8,5 @@ name = "rxml"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.21.2"
-quick-xml = "0.31.0"
+pyo3 = "0.22.1"
+quick-xml = "0.36.0"

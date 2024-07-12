@@ -1,8 +1,8 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
 
-#[derive(Clone)]
-#[pyclass]
+#[derive(Clone, PartialEq)]
+#[pyclass(eq, eq_int)]
 pub enum SearchType {
     Tag,
     Attr,
@@ -25,6 +25,7 @@ pub struct Node {
 #[pymethods]
 impl Node {
     #[new]
+    #[pyo3(signature = (name, attrs=None, children=None, text=None))]
     pub fn new(
         name: String,
         attrs: Option<HashMap<String, String>>,
@@ -40,6 +41,7 @@ impl Node {
             text,
         })
     }
+    #[pyo3(signature = (spacing=None))]
     fn __to_string(&self, spacing: Option<u8>) -> String {
         let _spacing = spacing.unwrap_or(0);
         let spaces = " ".repeat(_spacing as usize);
@@ -74,6 +76,7 @@ impl Node {
     fn __repr__(&self) -> String {
         format!("Node({})", self.name)
     }
+    #[pyo3(signature = (name, depth=None))]
     fn search_by_name(&self, name: &str, depth: Option<i32>) -> Vec<Node> {
         let mut nodes = Vec::new();
         if self.name == name {
@@ -89,6 +92,7 @@ impl Node {
         }
         nodes
     }
+    #[pyo3(signature = (key, depth=None))]
     fn search_by_attr(&self, key: &str, depth: Option<i32>) -> Vec<Node> {
         let mut nodes = Vec::new();
         if self.attrs.contains_key(key) {
@@ -104,6 +108,7 @@ impl Node {
         }
         nodes
     }
+    #[pyo3(signature = (text, depth=None))]
     fn search_by_text(&self, text: &str, depth: Option<i32>) -> Vec<Node> {
         let mut nodes = Vec::new();
         if let Some(t) = &self.text {
@@ -121,6 +126,7 @@ impl Node {
         }
         nodes
     }
+    #[pyo3(signature = (by, value, depth=None))]
     pub fn search(&self, by: SearchType, value: &str, depth: Option<i32>) -> Vec<Node> {
         match by {
             SearchType::Tag => self.search_by_name(value, depth),

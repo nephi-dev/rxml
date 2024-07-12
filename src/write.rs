@@ -6,6 +6,7 @@ use quick_xml::events::{BytesEnd, BytesStart, BytesText, Event};
 use quick_xml::Writer;
 use std::fs::File;
 use std::io::{Cursor, Write};
+
 fn write_node(writer: &mut Writer<Cursor<Vec<u8>>>, node: Node) {
     let mut start = BytesStart::new(&node.name);
     for (k, v) in node.attrs {
@@ -38,6 +39,7 @@ pub fn write_node_to_string(node: Node, indent: usize, default_xml_def: bool) ->
 }
 
 #[pyfunction]
+#[pyo3(signature = (node, file_path, indent=None, default_xml_def=None))]
 pub fn write_file(
     node: Node,
     file_path: String,
@@ -52,6 +54,7 @@ pub fn write_file(
 }
 
 #[pyfunction]
+#[pyo3(signature = (node, indent, default_xml_def=None))]
 pub fn write_string(node: Node, indent: Option<usize>, default_xml_def: Option<bool>) -> String {
     let _indent = indent.unwrap_or(4);
     let _default_xml_def = default_xml_def.unwrap_or(true);
