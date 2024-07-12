@@ -66,6 +66,7 @@ mod tests {
     use crate::entities::Node;
     use crate::write::{write_file, write_node_to_string, write_string};
     use std::collections::HashMap;
+    use std::fs::{read_to_string, remove_file};
     fn root_node() -> Node {
         let mut attrs = HashMap::new();
         attrs.insert("test".to_string(), "test".to_string());
@@ -117,8 +118,8 @@ mod tests {
             Some(4),
             Some(true),
         );
-        let file_str = std::fs::read_to_string("tests/test_write.xml").unwrap();
+        let file_str = read_to_string("tests/test_write.xml").unwrap();
+        remove_file("tests/test_write.xml").unwrap();
         assert_eq!(file_str, expected);
-        std::fs::remove_file("tests/test_write.xml").unwrap();
     }
 }

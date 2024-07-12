@@ -76,9 +76,15 @@ pub fn read_string(xml_string: String, root_tag: String) -> Node {
 mod tests {
     use crate::f_str;
     use crate::read::read_file;
+    use std::fs::{remove_file, File};
+    use std::io::prelude::*;
     #[test]
     fn test_read_file() {
+        let mut file = File::create("tests/test.xml").unwrap();
+        file.write_all(b"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root test=\"test\">\n    <child test=\"test\">\n        <child>test</child>\n    </child>\n</root>")
+            .unwrap();
         let node = read_file(f_str!("tests/test.xml"), f_str!("root"));
+        remove_file("tests/test.xml").unwrap();
         assert_eq!(node.name, f_str!("root"));
         assert_eq!(node.attrs.len(), 1);
         assert_eq!(node.attrs.get("test").unwrap(), "test");
