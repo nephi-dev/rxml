@@ -1,22 +1,12 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
 
+#[derive(Clone)]
 #[pyclass]
 pub enum SearchType {
     Tag,
     Attr,
     Text,
-}
-
-impl SearchType {
-    fn from_str(s: &str) -> Self {
-        match s {
-            "tag" => SearchType::Tag,
-            "attr" => SearchType::Attr,
-            "text" => SearchType::Text,
-            _ => panic!("Invalid search type"),
-        }
-    }
 }
 
 #[derive(Clone)]
@@ -84,44 +74,59 @@ impl Node {
     fn __repr__(&self) -> String {
         format!("Node({})", self.name)
     }
-    fn search_by_name(&self, name: String) -> Vec<Node> {
+    fn search_by_name(&self, name: &str, depth: Option<i32>) -> Vec<Node> {
         let mut nodes = Vec::new();
-        for child in &self.children {
-            if child.name == name {
-                nodes.push(child.clone());
+        if self.name == name {
+            nodes.push(self.clone());
+        }
+        if let Some(d) = depth {
+            if d == 0 {
+                return nodes;
             }
-            nodes.append(&mut child.search_by_name(name.clone()));
+        }
+        for child in &self.children {
+            nodes.append(&mut child.search_by_name(name, depth.map(|d| d - 1)));
         }
         nodes
     }
-    fn search_by_attr(&self, key: String) -> Vec<Node> {
+    fn search_by_attr(&self, key: &str, depth: Option<i32>) -> Vec<Node> {
         let mut nodes = Vec::new();
-        for child in &self.children {
-            if child.attrs.contains_key(&key) {
-                nodes.push(child.clone());
+        if self.attrs.contains_key(key) {
+            nodes.push(self.clone());
+        }
+        if let Some(d) = depth {
+            if d == 0 {
+                return nodes;
             }
-            nodes.append(&mut child.search_by_attr(key.clone()));
+        }
+        for child in &self.children {
+            nodes.append(&mut child.search_by_attr(key, depth.map(|d| d - 1)));
         }
         nodes
     }
-    fn search_by_text(&self, text: String) -> Vec<Node> {
+    fn search_by_text(&self, text: &str, depth: Option<i32>) -> Vec<Node> {
         let mut nodes = Vec::new();
-        for child in &self.children {
-            if child.text.is_some() && child.text.as_ref().unwrap() == &text {
-                nodes.push(child.clone());
+        if let Some(t) = &self.text {
+            if t == text {
+                nodes.push(self.clone());
             }
-            nodes.append(&mut child.search_by_text(text.clone()));
+        }
+        if let Some(d) = depth {
+            if d == 0 {
+                return nodes;
+            }
+        }
+        for child in &self.children {
+            nodes.append(&mut child.search_by_text(text, depth.map(|d| d - 1)));
         }
         nodes
     }
-    pub fn search(&self, by: String, value: String) -> Vec<Node> {
-        let mut nodes = Vec::new();
-        match SearchType::from_str(&by) {
-            SearchType::Tag => nodes.append(&mut self.search_by_name(value)),
-            SearchType::Attr => nodes.append(&mut self.search_by_attr(value)),
-            SearchType::Text => nodes.append(&mut self.search_by_text(value)),
+    pub fn search(&self, by: SearchType, value: &str, depth: Option<i32>) -> Vec<Node> {
+        match by {
+            SearchType::Tag => self.search_by_name(value, depth),
+            SearchType::Attr => self.search_by_attr(value, depth),
+            SearchType::Text => self.search_by_text(value, depth),
         }
-        nodes
     }
 }
 
@@ -146,17 +151,25 @@ mod tests {
         assert_eq!(node.attrs.get("test").unwrap(), "test");
         assert_eq!(node.children.len(), 0);
         assert_eq!(node.text.clone().unwrap(), "test");
-        let child_node = Node::new(
+        let mut child_node = Node::new(
             f_str!("test new"),
             Some(attrs.clone()),
             Some(Vec::new()),
             Some(f_str!("test")),
-        );
-        node.children.push(child_node.unwrap());
-        assert_eq!(node.children.len(), 1);
-        assert_eq!(node.search_by_name(f_str!("test")).len(), 0);
-        assert_eq!(node.search_by_name(f_str!("test new")).len(), 1);
-        assert_eq!(node.search_by_attr(f_str!("test")).len(), 1);
-        assert_eq!(node.search_by_text(f_str!("test")).len(), 1);
+        )
+        .unwrap();
+        let second_child_node = Node::new(
+            f_str!("test new"),
+            Some(attrs.clone()),
+            Some(Vec::new()),
+            Some(f_str!("test")),
+        )
+        .unwrap();
+        child_node.children.push(second_child_node);
+        node.children.push(child_node);
+        assert_eq!(node.search_by_name("test", None).len(), 1);
+        assert_eq!(node.search_by_name("test new", Some(2)).len(), 2);
+        assert_eq!(node.search_by_attr("test", Some(2)).len(), 3);
+        assert_eq!(node.search_by_text("test", Some(2)).len(), 3);
     }
 }
