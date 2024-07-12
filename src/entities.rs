@@ -35,7 +35,10 @@ impl Node {
     }
 
     pub fn get_child_by_name(&self, name: &str) -> Option<Node> {
-        self.children.iter().find(|&child| child.name == name).cloned()
+        self.children
+            .iter()
+            .find(|&child| child.name == name)
+            .cloned()
     }
 
     fn __getitem__(&self, key: &Bound<'_, PyAny>) -> PyResult<Option<Node>> {
@@ -44,7 +47,9 @@ impl Node {
         } else if let Ok(index) = key.extract::<usize>() {
             Ok(self.children.get(index).cloned())
         } else {
-            Err(pyo3::exceptions::PyTypeError::new_err("Invalid key type. Key must be a string or an integer"))
+            Err(pyo3::exceptions::PyTypeError::new_err(
+                "Invalid key type. Key must be a string or an integer",
+            ))
         }
     }
 
