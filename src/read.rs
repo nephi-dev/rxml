@@ -40,6 +40,15 @@ fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
                     root.children.push(child);
                 }
             },
+            Ok(Event::Empty(e)) => {
+                let node = Node {
+                    name: f_utf!(e.name().as_ref()),
+                    attrs: get_attrs(e.attributes()),
+                    children: Vec::new(),
+                    text: None,
+                };
+                root.children.push(node);
+            }
             Ok(Event::Text(e)) => {
                 root.text = Some(f_str!(e.unescape().unwrap()));
             }
@@ -75,7 +84,7 @@ pub fn read_string(xml_string: String, root_tag: String) -> Node {
 #[cfg(test)]
 mod tests {
     use crate::f_str;
-    use crate::read::read_file;
+    use crate::read::{read_file, read_string};
     use std::fs::{remove_file, File};
     use std::io::prelude::*;
     #[test]
@@ -94,5 +103,11 @@ mod tests {
         assert_eq!(node.children[0].attrs.get("test").unwrap(), "test");
         assert_eq!(node.children[0].text.as_ref().unwrap(), "test");
         assert_eq!(node.children[0].children.len(), 0);
+    }
+    #[test]
+    fn test_read_self_closing_tag() {
+        let xml_string = f_str!("<?xml version=\"1.0\" encoding=\"utf-8\"?><tag><wrapper><inner1>value</inner1><inner2 attr=\"attr\"/><inner3>value</inner3></wrapper></tag>");
+        let node = read_string(xml_string, f_str!("tag"));
+        assert_eq!(node.children[0].children.len(), 3);
     }
 }
