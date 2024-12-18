@@ -1,9 +1,9 @@
 from enum import Enum
 
 class SearchType(Enum):
-    tag: str
-    attr: str
-    text: str
+    Tag: str
+    Attr: str
+    Text: str
 
 class Node:
     name: str
@@ -21,7 +21,9 @@ class Node:
     def __to_string(self, spacing: int | None) -> str: ...
     def __str__(self) -> str: ...
     def __repr__(self) -> str: ...
-    def search(self, by: str, value: str, depth: int | None = None) -> list[Node]: ...
+    def search(
+        self, by: SearchType, value: str, depth: int | None = None
+    ) -> list[Node]: ...
 
 def read_file(file_path: str, root_tag: str) -> Node: ...
 def read_string(xml_string: str, root_tag: str) -> Node: ...
