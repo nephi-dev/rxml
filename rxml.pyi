@@ -1,9 +1,9 @@
 from enum import Enum
 
 class SearchType(Enum):
-    Tag: str
-    Attr: str
-    Text: str
+    Tag: int
+    Attr: int
+    Text: int
 
 class Node:
     name: str
