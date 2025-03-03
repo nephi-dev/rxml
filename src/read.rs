@@ -1,8 +1,8 @@
 use pyo3::prelude::*;
 
-use quick_xml::events::attributes::Attributes;
-use quick_xml::events::Event;
 use quick_xml::Reader;
+use quick_xml::events::Event;
+use quick_xml::events::attributes::Attributes;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
@@ -85,7 +85,7 @@ pub fn read_string(xml_string: String, root_tag: String) -> Node {
 mod tests {
     use crate::f_str;
     use crate::read::{read_file, read_string};
-    use std::fs::{remove_file, File};
+    use std::fs::{File, remove_file};
     use std::io::prelude::*;
     #[test]
     fn test_read_file() {
@@ -106,7 +106,9 @@ mod tests {
     }
     #[test]
     fn test_read_self_closing_tag() {
-        let xml_string = f_str!("<?xml version=\"1.0\" encoding=\"utf-8\"?><tag><wrapper><inner1>value</inner1><inner2 attr=\"attr\"/><inner3>value</inner3></wrapper></tag>");
+        let xml_string = f_str!(
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><tag><wrapper><inner1>value</inner1><inner2 attr=\"attr\"/><inner3>value</inner3></wrapper></tag>"
+        );
         let node = read_string(xml_string, f_str!("tag"));
         assert_eq!(node.children[0].children.len(), 3);
     }

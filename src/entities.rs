@@ -1,3 +1,4 @@
+#![allow(clippy::only_used_in_recursion)]
 use crate::f_str;
 use pyo3::{prelude::*, types::PyType};
 use std::collections::HashMap;
