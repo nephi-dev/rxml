@@ -1,5 +1,15 @@
-use pyo3::prelude::*;
+#![allow(clippy::only_used_in_recursion)]
+use crate::f_str;
+use pyo3::{prelude::*, types::PyType};
 use std::collections::HashMap;
+
+#[derive(Clone, FromPyObject, IntoPyObject, Eq, PartialEq, Debug)]
+pub enum HashmapTypes {
+    String(String),
+    Vec(Vec<HashMap<String, HashmapTypes>>),
+    NullableString(Option<String>),
+    Map(HashMap<String, String>),
+}
 
 #[derive(Clone, PartialEq)]
 #[pyclass(eq, eq_int)]
@@ -134,13 +144,71 @@ impl Node {
             SearchType::Text => self.search_by_text(value, depth),
         }
     }
+
+    #[classmethod]
+    pub fn from_dict(
+        cls: &Bound<'_, PyType>,
+        dict_: HashMap<String, HashmapTypes>,
+    ) -> PyResult<Self> {
+        let name = match dict_.get("name") {
+            Some(HashmapTypes::String(n)) => n,
+            _ => return Err(pyo3::exceptions::PyValueError::new_err("Invalid name")),
+        }
+        .to_owned();
+        let temp_attrs = match dict_.get("attrs") {
+            Some(HashmapTypes::Map(a)) => a,
+            _ => return Err(pyo3::exceptions::PyValueError::new_err("Invalid attrs")),
+        };
+        let temp_children = match dict_.get("children") {
+            Some(HashmapTypes::Vec(c)) => c,
+            _ => return Err(pyo3::exceptions::PyValueError::new_err("Invalid children")),
+        };
+        let text = match dict_.get("text") {
+            Some(HashmapTypes::NullableString(t)) => t.to_owned(),
+            Some(HashmapTypes::String(t)) => Some(t.to_owned()),
+            _ => None,
+        };
+        let mut attrs = HashMap::new();
+        for (k, v) in temp_attrs {
+            attrs.insert(k.to_owned(), v.to_owned());
+        }
+        let mut children = Vec::new();
+        for child in temp_children {
+            children.push(Node::from_dict(cls, child.clone())?);
+        }
+        Ok(Self {
+            name,
+            attrs,
+            children,
+            text,
+        })
+    }
+
+    pub fn to_dict(&self) -> HashMap<String, HashmapTypes> {
+        let mut map = HashMap::new();
+        map.insert(f_str!("name"), HashmapTypes::String(self.name.clone()));
+        map.insert(f_str!("attrs"), HashmapTypes::Map(self.attrs.clone()));
+        map.insert(
+            f_str!("children"),
+            HashmapTypes::Vec(self.children.iter().map(|child| child.to_dict()).collect()),
+        );
+        map.insert(
+            f_str!("text"),
+            HashmapTypes::NullableString(self.text.clone()),
+        );
+        map
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use pyo3::{PyTypeInfo, Python};
+
     use crate::entities::Node;
     use crate::f_str;
     use std::collections::HashMap;
+
+    use super::HashmapTypes;
     #[test]
     fn test_node() {
         let mut attrs = HashMap::new();
@@ -177,5 +245,72 @@ mod tests {
         assert_eq!(node.search_by_name("test new", Some(2)).len(), 2);
         assert_eq!(node.search_by_attr("test", Some(2)).len(), 3);
         assert_eq!(node.search_by_text("test", Some(2)).len(), 3);
+    }
+
+    #[test]
+    fn test_from_dict() {
+        let mut hash1 = HashMap::new();
+        let mut attrs = HashMap::new();
+        let mut hash2 = HashMap::new();
+        hash2.insert(f_str!("name"), HashmapTypes::String(f_str!("test")));
+        hash2.insert(f_str!("attrs"), HashmapTypes::Map(HashMap::new()));
+        hash2.insert(f_str!("children"), HashmapTypes::Vec(Vec::new()));
+        hash2.insert(
+            f_str!("text"),
+            HashmapTypes::NullableString(Some(f_str!("test"))),
+        );
+
+        attrs.insert(f_str!("test"), f_str!("test"));
+
+        hash1.insert(f_str!("name"), HashmapTypes::String(f_str!("test")));
+        hash1.insert(f_str!("attrs"), HashmapTypes::Map(attrs));
+        hash1.insert(f_str!("children"), HashmapTypes::Vec(vec![(hash2)]));
+        hash1.insert(f_str!("text"), HashmapTypes::NullableString(None));
+
+        pyo3::prepare_freethreaded_python();
+        let node = Python::with_gil(|py| -> Node {
+            Node::from_dict(&Node::type_object(py), hash1).unwrap()
+        });
+        assert_eq!(node.name, "test");
+        assert_eq!(node.attrs.len(), 1);
+        assert_eq!(node.attrs.get("test").unwrap(), "test");
+        assert_eq!(node.children.len(), 1);
+        assert_eq!(node.children[0].text.clone().unwrap(), f_str!("test"));
+        assert_eq!(node.text, None);
+    }
+
+    #[test]
+    fn test_to_dict() {
+        let mut attrs = HashMap::new();
+        attrs.insert(f_str!("test"), f_str!("test"));
+        let mut node = Node::new(
+            f_str!("test"),
+            Some(attrs.clone()),
+            Some(Vec::new()),
+            Some(f_str!("test")),
+        )
+        .unwrap();
+        let child_node = Node::new(
+            f_str!("test new"),
+            Some(attrs.clone()),
+            Some(Vec::new()),
+            Some(f_str!("test")),
+        )
+        .unwrap();
+        node.children.push(child_node);
+        let hash = node.to_dict();
+        assert_eq!(
+            hash.get("name").unwrap(),
+            &HashmapTypes::String(f_str!("test"))
+        );
+        assert_eq!(hash.get("attrs").unwrap(), &HashmapTypes::Map(attrs));
+        assert_eq!(
+            hash.get("children").unwrap().clone(),
+            HashmapTypes::Vec(vec![node.children[0].to_dict()])
+        );
+        assert_eq!(
+            hash.get("text").unwrap(),
+            &HashmapTypes::NullableString(Some(f_str!("test")))
+        );
     }
 }

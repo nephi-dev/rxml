@@ -1,5 +1,7 @@
 from enum import Enum
 
+DictTypes = str | dict[str, str] | list[DictTypes] | None
+
 class SearchType(Enum):
     Tag: int
     Attr: int
@@ -24,6 +26,9 @@ class Node:
     def search(
         self, by: SearchType, value: str, depth: int | None = None
     ) -> list[Node]: ...
+    @classmethod
+    def from_dict(cls, dict_: dict[str, DictTypes]) -> Node: ...
+    def to_dict(self) -> dict[str, DictTypes]: ...
 
 def read_file(file_path: str, root_tag: str) -> Node: ...
 def read_string(xml_string: str, root_tag: str) -> Node: ...

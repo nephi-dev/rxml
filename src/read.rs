@@ -106,7 +106,9 @@ mod tests {
     }
     #[test]
     fn test_read_self_closing_tag() {
-        let xml_string = f_str!("<?xml version=\"1.0\" encoding=\"utf-8\"?><tag><wrapper><inner1>value</inner1><inner2 attr=\"attr\"/><inner3>value</inner3></wrapper></tag>");
+        let xml_string = f_str!(
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><tag><wrapper><inner1>value</inner1><inner2 attr=\"attr\"/><inner3>value</inner3></wrapper></tag>"
+        );
         let node = read_string(xml_string, f_str!("tag"));
         assert_eq!(node.children[0].children.len(), 3);
     }
