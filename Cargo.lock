@@ -202,7 +202,7 @@ dependencies = [
 
 [[package]]
 name = "rxml"
-version = "2.3.0"
+version = "2.3.1"
 dependencies = [
  "pyo3",
  "quick-xml",
