@@ -22,7 +22,7 @@ fn get_attrs(attrs: Attributes) -> HashMap<String, String> {
 fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
     let mut buf = Vec::new();
     let mut root = Node {
-        name: root_tag.clone(),
+        name: root_tag,
         attrs: HashMap::new(),
         children: Vec::new(),
         text: None,
@@ -30,7 +30,7 @@ fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
     loop {
         match reader.read_event_into(&mut buf) {
             Ok(Event::Start(e)) => match e.name().as_ref() {
-                _e if _e == root_tag.as_bytes() => {
+                _e if _e == root.name.as_bytes() => {
                     root.attrs = get_attrs(e.attributes());
                 }
                 _ => {
@@ -52,7 +52,7 @@ fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
             Ok(Event::Text(e)) => {
                 root.text = Some(f_str!(e.unescape().unwrap()));
             }
-            Ok(Event::End(e)) if e.name().as_ref() == root_tag.as_bytes() => {
+            Ok(Event::End(e)) if e.name().as_ref() == root.name.as_bytes() => {
                 break;
             }
             Ok(Event::Eof) => break,

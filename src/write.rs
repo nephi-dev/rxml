@@ -78,7 +78,7 @@ mod tests {
         };
         let mut child = Node {
             name: "child".to_string(),
-            attrs: attrs.clone(),
+            attrs,
             children: Vec::new(),
             text: None,
         };
