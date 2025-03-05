@@ -1,7 +1,6 @@
 #![allow(clippy::only_used_in_recursion)]
 use crate::f_str;
 use pyo3::{prelude::*, types::PyType};
-use rayon::prelude::*;
 use std::collections::HashMap;
 
 #[derive(Clone, FromPyObject, IntoPyObject, Eq, PartialEq, Debug)]
@@ -187,12 +186,7 @@ impl Node {
             (f_str!("attrs"), HashmapTypes::Map(self.attrs.clone())),
             (
                 f_str!("children"),
-                HashmapTypes::Vec(
-                    self.children
-                        .par_iter()
-                        .map(|child| child.to_dict())
-                        .collect(),
-                ),
+                HashmapTypes::Vec(self.children.iter().map(|child| child.to_dict()).collect()),
             ),
             (
                 f_str!("text"),
