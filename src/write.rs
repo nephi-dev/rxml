@@ -64,29 +64,30 @@ pub fn write_string(node: Node, indent: Option<usize>, default_xml_def: Option<b
 #[cfg(test)]
 mod tests {
     use crate::entities::Node;
+    use crate::f_str;
     use crate::write::{write_file, write_node_to_string, write_string};
     use std::collections::HashMap;
     use std::fs::{read_to_string, remove_file};
     fn root_node() -> Node {
         let mut attrs = HashMap::new();
-        attrs.insert("test".to_string(), "test".to_string());
+        attrs.insert(f_str!("test"), f_str!("test"));
         let mut root = Node {
-            name: "root".to_string(),
+            name: f_str!("root"),
             attrs: attrs.clone(),
             children: Vec::new(),
             text: None,
         };
         let mut child = Node {
-            name: "child".to_string(),
-            attrs: attrs.clone(),
+            name: f_str!("child"),
+            attrs,
             children: Vec::new(),
             text: None,
         };
         child.children.push(Node {
-            name: "child".to_string(),
+            name: f_str!("child"),
             attrs: HashMap::new(),
             children: Vec::new(),
-            text: Some("test".to_string()),
+            text: Some(f_str!("test")),
         });
         root.children.push(child);
         root
@@ -112,12 +113,7 @@ mod tests {
     fn test_write_file() {
         let root = root_node();
         let expected = expected_file();
-        write_file(
-            root,
-            "tests/test_write.xml".to_string(),
-            Some(4),
-            Some(true),
-        );
+        write_file(root, f_str!("tests/test_write.xml"), Some(4), Some(true));
         let file_str = read_to_string("tests/test_write.xml").unwrap();
         remove_file("tests/test_write.xml").unwrap();
         assert_eq!(file_str, expected);

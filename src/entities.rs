@@ -1,6 +1,7 @@
 #![allow(clippy::only_used_in_recursion)]
 use crate::f_str;
 use pyo3::{prelude::*, types::PyType};
+use rayon::prelude::*;
 use std::collections::HashMap;
 
 #[derive(Clone, FromPyObject, IntoPyObject, Eq, PartialEq, Debug)]
@@ -154,28 +155,24 @@ impl Node {
             Some(HashmapTypes::String(n)) => n,
             _ => return Err(pyo3::exceptions::PyValueError::new_err("Invalid name")),
         }
-        .to_owned();
-        let temp_attrs = match dict_.get("attrs") {
+        .clone();
+        let attrs = match dict_.get("attrs") {
             Some(HashmapTypes::Map(a)) => a,
             _ => return Err(pyo3::exceptions::PyValueError::new_err("Invalid attrs")),
-        };
-        let temp_children = match dict_.get("children") {
+        }
+        .clone();
+        let children = match dict_.get("children") {
             Some(HashmapTypes::Vec(c)) => c,
             _ => return Err(pyo3::exceptions::PyValueError::new_err("Invalid children")),
-        };
+        }
+        .iter()
+        .map(|child| Node::from_dict(cls, child.clone()))
+        .collect::<PyResult<Vec<Node>>>()?;
         let text = match dict_.get("text") {
-            Some(HashmapTypes::NullableString(t)) => t.to_owned(),
-            Some(HashmapTypes::String(t)) => Some(t.to_owned()),
+            Some(HashmapTypes::NullableString(t)) => t.clone(),
+            Some(HashmapTypes::String(t)) => Some(t.clone()),
             _ => None,
         };
-        let mut attrs = HashMap::new();
-        for (k, v) in temp_attrs {
-            attrs.insert(k.to_owned(), v.to_owned());
-        }
-        let mut children = Vec::new();
-        for child in temp_children {
-            children.push(Node::from_dict(cls, child.clone())?);
-        }
         Ok(Self {
             name,
             attrs,
@@ -185,18 +182,23 @@ impl Node {
     }
 
     pub fn to_dict(&self) -> HashMap<String, HashmapTypes> {
-        let mut map = HashMap::new();
-        map.insert(f_str!("name"), HashmapTypes::String(self.name.clone()));
-        map.insert(f_str!("attrs"), HashmapTypes::Map(self.attrs.clone()));
-        map.insert(
-            f_str!("children"),
-            HashmapTypes::Vec(self.children.iter().map(|child| child.to_dict()).collect()),
-        );
-        map.insert(
-            f_str!("text"),
-            HashmapTypes::NullableString(self.text.clone()),
-        );
-        map
+        HashMap::from([
+            (f_str!("name"), HashmapTypes::String(self.name.clone())),
+            (f_str!("attrs"), HashmapTypes::Map(self.attrs.clone())),
+            (
+                f_str!("children"),
+                HashmapTypes::Vec(
+                    self.children
+                        .par_iter()
+                        .map(|child| child.to_dict())
+                        .collect(),
+                ),
+            ),
+            (
+                f_str!("text"),
+                HashmapTypes::NullableString(self.text.clone()),
+            ),
+        ])
     }
 }
 
@@ -234,7 +236,7 @@ mod tests {
         .unwrap();
         let second_child_node = Node::new(
             f_str!("test new"),
-            Some(attrs.clone()),
+            Some(attrs),
             Some(Vec::new()),
             Some(f_str!("test")),
         )
