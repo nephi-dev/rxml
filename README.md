@@ -1,8 +1,19 @@
-# rxml
+<h2 align="center">Like my work? consider supporting it!</h2>
 
-## What is rxml?
+[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/nephilim)
 
-`rxml` is a simple python library to read xml files up to 2 times faster than python's `xml(ElementTree)` library.
+<h1 align="center">RXML</h1>
+
+<p align="center"><em>rxml is a simple python library to read xml files up to 2 times faster than python's `xml(ElementTree)` library.</em></p>
+
+<p align="center">
+<a href="https://pypi.org/project/rxml" target="_blank">
+    <img src="https://img.shields.io/pypi/v/rxml?color=%2334D058&label=pypi%20package" alt="Package version">
+</a>
+<a href="https://pypi.org/project/rxml" target="_blank">
+    <img src="https://img.shields.io/pypi/pyversions/rxml.svg?color=%2334D058" alt="Supported Python versions">
+</a>
+</p>
 
 ## Installation
 
