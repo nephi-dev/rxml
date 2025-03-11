@@ -4,7 +4,7 @@
 
 <h1 align="center">RXML</h1>
 
-<p align="center"><em>rxml is a simple python library to read xml files up to 2 times faster than python's `xml(ElementTree)` library.</em></p>
+<p align="center"><em><code>rxml</code> is a simple python library to read xml files up to 2 times faster than python's <code>xml(ElementTree)</code> library.</em></p>
 
 <p align="center">
 <a href="https://pypi.org/project/rxml" target="_blank">
