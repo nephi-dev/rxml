@@ -12,6 +12,10 @@ fn write_node(writer: &mut Writer<Cursor<Vec<u8>>>, node: Node) {
     for (k, v) in node.attrs {
         start.push_attribute((k.as_str(), v.as_str()));
     }
+    if node.children.is_empty() && node.text.is_none() {
+        writer.write_event(Event::Empty(start)).unwrap();
+        return;
+    }
     writer.write_event(Event::Start(start)).unwrap();
     if let Some(text) = node.text {
         writer
@@ -117,5 +121,25 @@ mod tests {
         let file_str = read_to_string("tests/test_write.xml").unwrap();
         remove_file("tests/test_write.xml").unwrap();
         assert_eq!(file_str, expected);
+    }
+    #[test]
+    fn test_write_self_closing_tag() {
+        let mut root = Node {
+            name: f_str!("root"),
+            attrs: HashMap::new(),
+            children: Vec::new(),
+            text: None,
+        };
+        let mut attrs = HashMap::new();
+        attrs.insert(f_str!("attr"), f_str!("value"));
+        root.children.push(Node {
+            name: f_str!("child"),
+            attrs,
+            children: Vec::new(),
+            text: None,
+        });
+        let expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n    <child attr=\"value\"/>\n</root>";
+        let result = write_string(root, Some(4), Some(true));
+        assert_eq!(result, expected);
     }
 }
