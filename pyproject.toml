@@ -22,7 +22,7 @@ classifiers = [
     "Typing :: Typed",
     "License :: OSI Approved :: MIT License",
 ]
-version = "2.3.3"
+version = "2.3.4"
 
 
 [tool.maturin]
