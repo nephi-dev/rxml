@@ -2,8 +2,8 @@ use pyo3::prelude::*;
 
 use crate::entities::Node;
 use crate::f_utf;
-use quick_xml::events::{BytesEnd, BytesStart, BytesText, Event};
 use quick_xml::Writer;
+use quick_xml::events::{BytesEnd, BytesStart, BytesText, Event};
 use std::fs::File;
 use std::io::{Cursor, Write};
 
