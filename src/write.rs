@@ -58,7 +58,7 @@ pub fn write_file(
 }
 
 #[pyfunction]
-#[pyo3(signature = (node, indent, default_xml_def=None))]
+#[pyo3(signature = (node, indent=None, default_xml_def=None))]
 pub fn write_string(node: Node, indent: Option<usize>, default_xml_def: Option<bool>) -> String {
     let _indent = indent.unwrap_or(4);
     let _default_xml_def = default_xml_def.unwrap_or(true);
