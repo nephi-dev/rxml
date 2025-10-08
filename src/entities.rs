@@ -92,10 +92,10 @@ impl Node {
         if self.name == name {
             nodes.push(self.clone());
         }
-        if let Some(d) = depth {
-            if d == 0 {
-                return nodes;
-            }
+        if let Some(d) = depth
+            && d == 0
+        {
+            return nodes;
         }
         for child in &self.children {
             nodes.append(&mut child.search_by_name(name, depth.map(|d| d - 1)));
@@ -108,10 +108,10 @@ impl Node {
         if self.attrs.contains_key(key) {
             nodes.push(self.clone());
         }
-        if let Some(d) = depth {
-            if d == 0 {
-                return nodes;
-            }
+        if let Some(d) = depth
+            && d == 0
+        {
+            return nodes;
         }
         for child in &self.children {
             nodes.append(&mut child.search_by_attr(key, depth.map(|d| d - 1)));
@@ -121,15 +121,15 @@ impl Node {
     #[pyo3(signature = (text, depth=None))]
     fn search_by_text(&self, text: &str, depth: Option<i32>) -> Vec<Node> {
         let mut nodes = Vec::new();
-        if let Some(t) = &self.text {
-            if t == text {
-                nodes.push(self.clone());
-            }
+        if let Some(t) = &self.text
+            && t == text
+        {
+            nodes.push(self.clone());
         }
-        if let Some(d) = depth {
-            if d == 0 {
-                return nodes;
-            }
+        if let Some(d) = depth
+            && d == 0
+        {
+            return nodes;
         }
         for child in &self.children {
             nodes.append(&mut child.search_by_text(text, depth.map(|d| d - 1)));
