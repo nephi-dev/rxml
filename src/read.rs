@@ -50,7 +50,7 @@ fn read_node(root_tag: String, reader: &mut Reader<&[u8]>) -> Node {
                 root.children.push(node);
             }
             Ok(Event::Text(e)) => {
-                root.text = Some(f_str!(e.unescape().unwrap()));
+                root.text = Some(f_str!(e.decode().unwrap()));
             }
             Ok(Event::End(e)) if e.name().as_ref() == root.name.as_bytes() => {
                 break;
