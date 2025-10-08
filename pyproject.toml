@@ -1,5 +1,5 @@
 [build-system]
-requires = ["maturin>=1.8.2"]
+requires = ["maturin>=1.9.6"]
 build-backend = "maturin"
 
 [project]
@@ -19,10 +19,11 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Typing :: Typed",
     "License :: OSI Approved :: MIT License",
 ]
-version = "2.3.5"
+version = "2.3.6"
 
 
 [tool.maturin]

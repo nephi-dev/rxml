@@ -263,8 +263,8 @@ mod tests {
         hash1.insert(f_str!("children"), HashmapTypes::Vec(vec![(hash2)]));
         hash1.insert(f_str!("text"), HashmapTypes::NullableString(None));
 
-        pyo3::prepare_freethreaded_python();
-        let node = Python::with_gil(|py| -> Node {
+        Python::initialize();
+        let node = Python::attach(|py| -> Node {
             Node::from_dict(&Node::type_object(py), hash1).unwrap()
         });
         assert_eq!(node.name, "test");
