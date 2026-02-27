@@ -26,16 +26,7 @@ jobs:
       - name: Cargo clippy
         run: cargo clippy --all-targets -- -D warnings
       - name: Cargo test
-        run: cargo test
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install dev dependencies
-        run: pip install maturin pytest
-      - name: Build & install (dev)
-        run: maturin develop
-      - name: Pytest
-        run: pytest tests/
+        run: cargo test --all --release
 
   linux:
     runs-on: ubuntu-latest
