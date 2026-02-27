@@ -6,7 +6,7 @@ Thanks for your interest in contributing to rxml! This document provides guideli
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.10+
 - A stable [Rust toolchain](https://rustup.rs/)
 - [Maturin](https://www.maturin.rs/) (`pip install maturin`)
 
