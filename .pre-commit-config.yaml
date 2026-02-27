@@ -1,0 +1,30 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: rust-fmt
+        name: Rust fmt
+        entry: cargo fmt
+        language: system
+        types: [rust]
+      - id: rust-clippy
+        name: Rust clippy
+        entry: cargo clippy --all-targets -- -D warnings
+        language: system
+        types: [rust]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.4
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
