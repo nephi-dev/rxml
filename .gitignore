@@ -1,76 +1,39 @@
-/target
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+!Cargo.lock
 
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
-.pytest_cache/
 *.py[cod]
-
-# C extensions
+*$py.class
 *.so
-
-# Distribution / packaging
-.Python
-.venv/
-env/
-bin/
-build/
-develop-eggs/
-dist/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-include/
-man/
-venv/
+*.pyd
 *.egg-info/
-.installed.cfg
+dist/
+build/
 *.egg
+.eggs/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-pip-selfcheck.json
+# Virtual environments
+.venv/
+venv/
+ENV/
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Rope
-.ropeproject
-
-# Django stuff:
-*.log
-*.pot
-
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
 
-# Sphinx documentation
-docs/_build/
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
 
-# PyCharm
-.idea/
-
-# VSCode
-.vscode/
-
-# Pyenv
-.python-version
-
-# Test files
-/tests/*
-!/tests/.gitkeep
+# Maturin
+*.whl

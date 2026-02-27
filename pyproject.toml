@@ -1,33 +1,53 @@
 [build-system]
-requires = ["maturin>=1.9.6"]
+requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project]
 name = "rxml"
-description = "RXML is a python library to read and write xml files up to 2 times faster than python's xml included library."
+description = "A fast Python library for reading and writing XML files, powered by Rust."
 readme = "README.md"
-requires-python = ">=3.10"
-license = "MIT"
+license = { text = "MIT" }
+requires-python = ">=3.8"
 authors = [
-    { name = "Matheus Mendes", email = "mattheus2015@yahoo.com.br" },
+    { name = "nephi-dev" },
 ]
+keywords = ["xml", "parser", "rust", "pyo3", "fast"]
 classifiers = [
-    "Programming Language :: Rust",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Rust",
+    "Topic :: Text Processing :: Markup :: XML",
     "Typing :: Typed",
-    "License :: OSI Approved :: MIT License",
 ]
-version = "2.3.6"
+dynamic = ["version"]
 
+[project.urls]
+Homepage = "https://github.com/nephi-dev/rxml"
+Repository = "https://github.com/nephi-dev/rxml"
+Issues = "https://github.com/nephi-dev/rxml/issues"
+Changelog = "https://github.com/nephi-dev/rxml/releases"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "maturin>=1.0,<2.0",
+]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-
-[project.urls]
-Repository = "https://github.com/nephi-dev/rxml"
+include = [
+    { path = "py.typed", format = "wheel" },
+    { path = "rxml.pyi", format = "wheel" },
+]
