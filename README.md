@@ -12,10 +12,10 @@ A fast, lightweight Python library for reading and writing XML files, powered by
 
 ## Features
 
-- **Fast** — Rust-powered XML parsing, up to 2× faster than the standard library.
-- **Simple API** — Read, traverse, and write XML with minimal boilerplate.
-- **Type-safe** — Ships with a `.pyi` stub file for full editor autocompletion and type checking.
-- **Cross-platform** — Supports CPython and PyPy on Windows, macOS, and Linux.
+- **Fast** - Rust-powered XML parsing, up to 2× faster than the standard library.
+- **Simple API** - Read, traverse, and write XML with minimal boilerplate.
+- **Type-safe** - Ships with a `.pyi` stub file for full editor autocompletion and type checking.
+- **Cross-platform** - Supports CPython and PyPy on Windows, macOS, and Linux.
 
 ## Installation
 
@@ -87,7 +87,7 @@ Refer to the [`rxml.pyi`](rxml.pyi) stub file for the complete API surface, incl
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.10+
 - Rust toolchain (stable)
 - [Maturin](https://www.maturin.rs/) (`pip install maturin`)
 
@@ -117,6 +117,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Support
 
-If you find this project useful, consider supporting the author:
+If you find this project useful, consider supporting me:
 
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/nephilim)
