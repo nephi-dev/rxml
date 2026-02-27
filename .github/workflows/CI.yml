@@ -57,7 +57,7 @@ jobs:
     needs: [test]
     strategy:
       matrix:
-        target: [x86_64, aarch64, armv7]
+        target: [x86_64, x86, aarch64, armv7]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -101,11 +101,15 @@ jobs:
           path: dist
 
   macos:
-    runs-on: macos-latest
     needs: [test]
     strategy:
       matrix:
-        target: [x86_64, aarch64]
+        include:
+          - target: x86_64
+            runner: macos-13
+          - target: aarch64
+            runner: macos-14
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -142,9 +146,11 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/')  || github.event_name == 'workflow_dispatch'
     needs: [linux, musllinux, windows, macos, sdist]
     permissions:
+      attestations: write  # for artifact attestation
+      contents: read
       id-token: write  # for trusted publishing
     steps:
       - uses: actions/download-artifact@v4
@@ -152,5 +158,11 @@ jobs:
           pattern: wheels-*
           merge-multiple: true
           path: dist
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist

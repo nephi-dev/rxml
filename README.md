@@ -33,10 +33,10 @@ Given an XML file `note.xml`:
 <?xml version="1.0" encoding="UTF-8"?>
 <note example_attr="example value">
     <to>
-        <n>Example Name</n>
+        <name>Example Name</name>
     </to>
     <from>
-        <n>Example Name</n>
+        <name>Example Name</name>
     </from>
     <heading>An Example Heading</heading>
     <body>An Example Body!</body>
