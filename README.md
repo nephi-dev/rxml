@@ -1,86 +1,122 @@
-<h2 align="center">Like my work? consider supporting it!</h2>
+# rxml
 
-[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/nephilim)
+[![PyPI version](https://img.shields.io/pypi/v/rxml?color=%2334D058&label=pypi%20package)](https://pypi.org/project/rxml)
+[![Python versions](https://img.shields.io/pypi/pyversions/rxml.svg?color=%2334D058)](https://pypi.org/project/rxml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<h1 align="center">RXML</h1>
+A fast, lightweight Python library for reading and writing XML files, powered by Rust.
 
-<p align="center"><em><code>rxml</code> is a simple python library to read xml files up to 2 times faster than python's <code>xml(ElementTree)</code> library.</em></p>
+`rxml` provides up to **2× faster** XML parsing compared to Python's built-in `xml.etree.ElementTree`, with a simple and intuitive API.
 
-<p align="center">
-<a href="https://pypi.org/project/rxml" target="_blank">
-    <img src="https://img.shields.io/pypi/v/rxml?color=%2334D058&label=pypi%20package" alt="Package version">
-</a>
-<a href="https://pypi.org/project/rxml" target="_blank">
-    <img src="https://img.shields.io/pypi/pyversions/rxml.svg?color=%2334D058" alt="Supported Python versions">
-</a>
-</p>
+---
+
+## Features
+
+- **Fast** — Rust-powered XML parsing, up to 2× faster than the standard library.
+- **Simple API** — Read, traverse, and write XML with minimal boilerplate.
+- **Type-safe** — Ships with a `.pyi` stub file for full editor autocompletion and type checking.
+- **Cross-platform** — Supports CPython and PyPy on Windows, macOS, and Linux.
 
 ## Installation
-
-To install `rxml` you can use `pip`:
 
 ```bash
 pip install rxml
 ```
 
-Simply as that!
+## Quick Start
 
-## Example usage
+### Reading XML
 
-To a given xml with `test.xml` as name:
+Given an XML file `note.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <note example_attr="example value">
     <to>
-        <name>Example Name</name>
+        <n>Example Name</n>
     </to>
     <from>
-        <name>Example Name</name>
+        <n>Example Name</n>
     </from>
     <heading>An Example Heading</heading>
     <body>An Example Body!</body>
 </note>
 ```
 
-We write the following python code:
+Parse it with `rxml`:
 
 ```python
 from rxml import read_file
 
-root_node = read_file("test.xml", "note")
+root = read_file("note.xml", "note")
+
+for child in root.children:
+    print(child.name, child.text)
 ```
 
-where `"test.xml"` is the `file_name` and `"note"` is the `root_tag`.
-
-After that we can simply iter through the children with:
-
-```python
-for node in root_node.children:
-    # do something with the node here
-```
-
-You can also write it to a file or string(refer to the `.pyi` file for the args).
+### Writing XML
 
 ```python
 from rxml import Node, write_file
 
-example_node = Node(
-    name="hello_world", 
-    attrs={"example_attr": "example"},
-    text="Hello World!"
+node = Node(
+    name="greeting",
+    attrs={"lang": "en"},
+    text="Hello, World!",
 )
-write_file(example_node, "test_ex.xml")
+write_file(node, "greeting.xml")
 ```
 
-## Node attributes
+### The `Node` Object
 
-This is how the `Node` looks like:
+Every parsed element is represented as a `Node`:
 
 ```python
 class Node:
-    name: str
-    attrs: dict[str, str]
-    children: list[Node]
-    text: str
+    name: str                # Tag name
+    attrs: dict[str, str]    # Element attributes
+    children: list[Node]     # Child nodes
+    text: str                # Text content
 ```
+
+Refer to the [`rxml.pyi`](rxml.pyi) stub file for the complete API surface, including `read_string`, `write_string`, and additional utilities.
+
+## Development
+
+`rxml` is built with [PyO3](https://pyo3.rs) and [Maturin](https://www.maturin.rs/).
+
+### Prerequisites
+
+- Python 3.8+
+- Rust toolchain (stable)
+- [Maturin](https://www.maturin.rs/) (`pip install maturin`)
+
+### Building from Source
+
+```bash
+git clone https://github.com/nephi-dev/rxml.git
+cd rxml
+python -m venv .venv && source .venv/bin/activate
+pip install maturin
+maturin develop
+```
+
+### Running Tests
+
+```bash
+pytest tests/
+```
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/nephi-dev/rxml).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Support
+
+If you find this project useful, consider supporting the author:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/nephilim)
