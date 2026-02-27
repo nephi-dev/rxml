@@ -30,7 +30,6 @@ ENV/
 .DS_Store
 
 # Testing
-.pytest_cache/
 .coverage
 htmlcov/
 .tox/

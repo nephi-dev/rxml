@@ -41,7 +41,6 @@ Changelog = "https://github.com/nephi-dev/rxml/releases"
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0",
     "maturin>=1.0,<2.0",
 ]
 

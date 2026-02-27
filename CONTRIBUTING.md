@@ -30,7 +30,7 @@ Thanks for your interest in contributing to rxml! This document provides guideli
 3. Install development dependencies:
 
    ```bash
-   pip install maturin pytest
+   pip install maturin
    ```
 
 4. Build the project in development mode:
@@ -42,7 +42,7 @@ Thanks for your interest in contributing to rxml! This document provides guideli
 5. Run the tests:
 
    ```bash
-   pytest tests/
+   cargo test
    ```
 
 ## Making Changes
@@ -58,7 +58,6 @@ Thanks for your interest in contributing to rxml! This document provides guideli
 3. Ensure all tests pass:
 
    ```bash
-   pytest tests/
    cargo test
    ```
 

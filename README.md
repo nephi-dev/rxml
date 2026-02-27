@@ -104,7 +104,7 @@ maturin develop
 ### Running Tests
 
 ```bash
-pytest tests/
+cargo test
 ```
 
 ## Contributing

@@ -10,7 +10,7 @@
 
 ## Checklist
 
-- [ ] Tests pass (`pytest tests/` and `cargo test`)
+- [ ] Tests pass (`cargo test`)
 - [ ] Code is formatted (`cargo fmt` and `ruff format`)
 - [ ] Lints pass (`cargo clippy`)
 - [ ] Updated documentation (if applicable)
