@@ -12,7 +12,7 @@ pub enum HashmapTypes {
 }
 
 #[derive(Clone, PartialEq)]
-#[pyclass(eq, eq_int)]
+#[pyclass(from_py_object, eq, eq_int)]
 pub enum SearchType {
     Tag,
     Attr,
@@ -20,7 +20,7 @@ pub enum SearchType {
 }
 
 #[derive(Clone)]
-#[pyclass]
+#[pyclass(from_py_object)]
 pub struct Node {
     #[pyo3(get)]
     pub name: String,
