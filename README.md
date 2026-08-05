@@ -14,6 +14,8 @@ A fast, lightweight Python library for reading and writing XML files, powered by
 
 - **Fast** - Rust-powered XML parsing, up to 2× faster than the standard library.
 - **Simple API** - Read, traverse, and write XML with minimal boilerplate.
+- **Thread-friendly** - Parsing and writing release the GIL, so multiple documents can be processed in parallel from Python threads.
+- **Clear errors** - Malformed XML raises `ValueError` with position information; a missing file raises `FileNotFoundError`.
 - **Type-safe** - Ships with a `.pyi` stub file for full editor autocompletion and type checking.
 - **Cross-platform** - Supports CPython and PyPy on Windows, macOS, and Linux.
 
@@ -76,8 +78,10 @@ class Node:
     name: str                # Tag name
     attrs: dict[str, str]    # Element attributes
     children: list[Node]     # Child nodes
-    text: str                # Text content
+    text: str | None         # Text content, if any
 ```
+
+`children` and `search` results are shared references to the same node objects, not copies — repeated access and traversal are cheap.
 
 Refer to the [`rxml.pyi`](rxml.pyi) stub file for the complete API surface, including `read_string`, `write_string`, and additional utilities.
 
