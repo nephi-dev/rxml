@@ -11,7 +11,7 @@ class Node:
     name: str
     attrs: dict[str, str]
     children: list[Node]
-    text: str
+    text: str | None
 
     def __new__(
         cls,
