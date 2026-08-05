@@ -87,7 +87,3 @@ If you encounter a bug or have a feature request, please [open an issue](https:/
 - Your Python and Rust versions
 - Your operating system
 - A minimal reproducible example (if applicable)
-
-## Code of Conduct
-
-Please be respectful and constructive in all interactions. We are committed to providing a welcoming and inclusive experience for everyone.
