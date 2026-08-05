@@ -1,6 +1,6 @@
 [package]
 name = "rxml"
-version = "2.4.1"
+version = "2.5.0"
 edition = "2024"
 
 [lib]
@@ -10,3 +10,8 @@ crate-type = ["cdylib"]
 [dependencies]
 pyo3 = "0.29.1"
 quick-xml = "0.41.0"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
